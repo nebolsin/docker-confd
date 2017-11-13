@@ -1,6 +1,8 @@
 nebolsin/confd
 ====================
-[![](https://images.microbadger.com/badges/version/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)[![](https://images.microbadger.com/badges/image/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)[![](https://images.microbadger.com/badges/commit/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)
+[![](https://images.microbadger.com/badges/version/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)
+[![](https://images.microbadger.com/badges/image/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)
+[![](https://images.microbadger.com/badges/commit/nebolsin/confd.svg)](https://microbadger.com/images/nebolsin/confd)
 
 A minimalistic Docker image to use confd in multi-stage builds.
 
@@ -11,12 +13,24 @@ Based on the official [confd instructions](https://github.com/kelseyhightower/co
 Usage
 -----
 
+Add confd and config templates to your image:
+
 ```Dockerfile
 FROM nebolsin/confd:0.14.0-alpine as confd
 
 FROM alpine:latest
+
 COPY --from=confd /app/bin/confd /usr/local/bin/confd
+COPY templates /etc/confd/templates/
+COPY conf.d /etc/confd/conf.d/
+
 # ...
+```
+
+Generate configs in runtime:
+
+```shell
+/usr/local/bin/confd -backend env -onetime
 ```
 
 License
